@@ -19,11 +19,16 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "file[%d] open error\n", i);
             exit(1);
         }
-        count = fread(&buf_nbo[i], sizeof(uint32_t), 1, fp);
-        if (count = fread(&buf_nbo[i], sizeof(uint32_t), 1, fp) != 0) { // cheak is only 4 bytes
+        // cheak fp only 4 bytes
+        if (count = fread(&buf_nbo[i], sizeof(uint32_t), 1, fp) == 0 ) { // under 4 bytes
             fprintf(stderr, "file[%d] read error\n", i);
             exit(1);
-
+        }
+        else {
+            if (count = fread(&buf_nbo[i], sizeof(uint32_t), 1, fp) == 1) { // over 4 bytes
+                fprintf(stderr, "file[%d] read error\n", i);
+                exit(1);
+            }
         }
         buf_hbo[i] = ntohl(buf_nbo[i]); // always convert to HBO
         fclose(fp);
